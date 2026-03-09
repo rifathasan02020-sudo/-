@@ -1,9 +1,22 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { TranslationResult } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+let aiClient: GoogleGenAI | null = null;
+
+function getAIClient() {
+  if (!aiClient) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is missing. Please set it in your environment variables.");
+    }
+    aiClient = new GoogleGenAI({ apiKey });
+  }
+  return aiClient;
+}
 
 export async function translateText(text: string): Promise<TranslationResult> {
+  const ai = getAIClient();
+  
   const prompt = `
     You are an expert translator specializing in English, Arabic, and Urdu to Bengali translation.
     Your task is to translate the following text into Bengali and provide a detailed word-by-word breakdown.
