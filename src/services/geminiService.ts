@@ -85,8 +85,16 @@ export async function translateText(text: string): Promise<TranslationResult> {
       originalText: text,
       ...result,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Translation error:", error);
-    throw new Error("অনুবাদ করতে ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+    
+    // If it's our custom API key error, show it directly
+    if (error.message && error.message.includes("GEMINI_API_KEY")) {
+      throw new Error("Vercel এ GEMINI_API_KEY সেট করা নেই। দয়া করে Environment Variables এ আপনার API Key টি যুক্ত করে আবার Deploy করুন।");
+    }
+    
+    // Otherwise show a generic error but include the original message if possible
+    const errorMsg = error.message ? ` (${error.message})` : "";
+    throw new Error(`অনুবাদ করতে ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।${errorMsg}`);
   }
 }

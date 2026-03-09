@@ -17,8 +17,8 @@ export default defineConfig(({mode}) => {
           name: 'Translate App',
           short_name: 'Translate',
           description: 'A beautiful translation app',
-          theme_color: '#ffffff',
-          background_color: '#ffffff',
+          theme_color: '#0f172a',
+          background_color: '#0f172a',
           display: 'standalone',
           icons: [
             {
